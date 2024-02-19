@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notes App</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+
+<div class="container">
+    <h1>Notes App</h1>
+
+    <!-- Форма для добавления новой заметки -->
+    <form action="/notes/add" method="post" th:object="${newNote}">
+        <div class="form-group">
+            <label for="title">Title:</label>
+            <input type="text" id="title" name="title" class="form-control" th:field="*{title}" required>
+        </div>
+        <div class="form-group">
+            <label for="content">Content:</label>
+            <textarea id="content" name="content" class="form-control" th:field="*{content}" required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Add Note</button>
+    </form>
+
+    <!-- Таблица для отображения списка заметок -->
+    <table class="table">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Title</th>
+            <th>Content</th>
+            <th>Creation Date</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="note : ${notes}">
+            <td th:text="${note.id}"></td>
+            <td th:text="${note.title}"></td>
+            <td th:text="${note.content}"></td>
+            <td th:text="${note.creationDate}"></td>
+            <td>
+                <a href="#" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#editNoteModal"
+                   th:attr="data-noteId=${note.id}">Edit</a>
+                <a th:href="@{'/notes/' + ${note.id} + '/delete'}" class="btn btn-danger btn-sm">Delete</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <!-- Модальное окно для редактирования заметки -->
+    <div class="modal fade" id="editNoteModal" tabindex="-1" role="dialog" aria-labelledby="editNoteModalLabel" aria-hidden="true"
+         th:fragment="editNoteModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editNoteModalLabel">Edit Note</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <!-- Форма для редактирования заметки внутри модального окна -->
+                    <form action="/notes/update/{id}" method="post" th:object="${noteToUpdate}">
+                        <input type="hidden" th:field="*{id}">
+                        <div class="form-group">
+                            <label for="title">Title:</label>
+                            <input type="text" id="title" name="title" class="form-control" th:field="*{title}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="content">Content:</label>
+                            <textarea id="content" name="content" class="form-control" th:field="*{content}" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Update Note</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- ... -->
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
+
+
+
+
+
+
